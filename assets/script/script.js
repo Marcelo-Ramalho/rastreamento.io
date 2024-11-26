@@ -9,7 +9,7 @@ async function buscarStatus() {
 
     try {
         // Substituímos a URL pelo link do ngrok
-        const response = await fetch(`https://mighty-rules-kick.loca.lt/status/${osNumber}`);
+        const response = await fetch(`https://spotty-groups-burn.loca.lt/status/${osNumber}`);
         
         // Verifica se a resposta é válida antes de tentar convertê-la para JSON
         if (!response.ok) {
