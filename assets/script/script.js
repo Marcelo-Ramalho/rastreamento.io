@@ -3,7 +3,7 @@ async function buscarStatus() {
     console.log(`Buscando status para a OS: ${osNumber}`); // Debug
 
     if (!osNumber) {
-        alert("Por favor, insira um número de O.S.");
+        alert("Por favor, insira um número de O.S."); // Alerta quando o campo estiver vazio
         return;
     }
 
@@ -19,9 +19,11 @@ async function buscarStatus() {
         if (!response.ok) {
             // Adiciona um tratamento para status 404 ou qualquer outro erro
             if (response.status === 404) {
-                throw new Error('O.S. não encontrada.'); // Mensagem de erro personalizada
+                alert('O.S. não encontrada.'); // Mensagem de erro personalizada
+                return;
             } else {
-                throw new Error('Erro ao acessar a API.'); // Mensagem de erro para outros status
+                alert('Erro ao acessar a API.'); // Mensagem de erro para outros status
+                return;
             }
         }
 
@@ -37,23 +39,21 @@ async function buscarStatus() {
             // Verifica se o status é válido na resposta da API
             if (data.status) {
                 atualizarTexto(data.status);
-                document.getElementById("mensagemStatus").textContent = ''; // Limpa a mensagem
+                document.getElementById("errorMessage").textContent = ''; // Limpa a mensagem de erro
+                document.getElementById("errorMessage").style.display = 'none'; // Esconde o erro
             } else {
-                throw new Error('O.S. não encontrada.'); // Caso o status não esteja presente
+                alert("Nenhuma O.S encontrada: Status desconhecido"); // Alerta para status não encontrado
             }
         } else {
             // Se a resposta não for JSON, tenta pegar o texto da resposta
             const bodyText = await responseClone.text();
             console.log('Resposta não JSON:', bodyText); // Debug
-            throw new Error('Resposta inválida da API. Esperado JSON, mas obtido outro formato.');
+            alert('Resposta inválida da API. Esperado JSON, mas obtido outro formato.');
         }
 
     } catch (error) {
         console.error("Erro ao buscar o status:", error);
-        // Exibe a mensagem de erro correspondente
-        document.getElementById("mensagemStatus").textContent = error.message;
-        document.getElementById("mensagemStatus").style.color = 'red'; // Mensagem de erro
-        alert(error.message); // Alerta com a mensagem de erro
+        alert(error.message); // Exibe a mensagem de erro em um alerta
     }
 }
 
@@ -77,29 +77,24 @@ function atualizarTexto(status) {
         span.style.color = ''; // Reseta a cor dos ícones
     });
 
-    // Mapeamento dos status para os respectivos IDs de ícones
-    const statusMap = {
-        "GERADOR": "Gerador",
-        "POLIDORA": "Polidora",
-        "GRAVADORA": "Gravador",
-        "MONTAGEM": "Montagem"
-    };
+    // Procura o parágrafo e ícone correspondente ao status retornado
+    const paragraphs = document.querySelectorAll("footer p");
+    const icons = document.querySelectorAll("footer span");
+    let statusEncontrado = false;
 
-    // Verifica se o status retornado está no mapeamento
-    if (statusMap[status]) {
-        const icon = document.getElementById(statusMap[status]);
-        const paragraph = document.querySelector(`footer .${statusMap[status].toLowerCase()}`);
-        
-        if (icon && paragraph) {
-            // Marca o parágrafo e o ícone como 'ativos'
-            icon.classList.add("active");
-            icon.style.color = '#00ff06'; // Muda a cor do ícone para verde
-            paragraph.classList.add("active");
-            paragraph.style.color = '#00ff06'; // Muda a cor do texto para verde
+    paragraphs.forEach((p, index) => {
+        if (p.textContent.trim().toUpperCase() === status.toUpperCase()) {
+            p.classList.add("active");
+            p.style.color = '#00ff06'; // Muda a cor do texto para verde
+            icons[index].classList.add("active"); // Adiciona a classe 'active' ao ícone correspondente
+            icons[index].style.color = '#00ff06'; // Muda a cor do ícone para verde
+            statusEncontrado = true;
             console.log(`Parágrafo e ícone ${status} ativados!`); // Debug
         }
-    } else {
-        console.warn(`Nenhum ícone ou parágrafo encontrado para o status: ${status}`); // Debug
-        alert("Nenhuma O.S. encontrada para o status: " + status); // Alerta para status não encontrado
+    });
+
+    if (!statusEncontrado) {
+        console.warn(`Nenhum parágrafo encontrado para o status: ${status}`); // Debug
+        alert("Nenhuma O.S encontrada: " + status); // Alerta para status não encontrado
     }
 }
