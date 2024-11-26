@@ -10,7 +10,7 @@ async function buscarStatus() {
     // Define a URL da API com base no ambiente
     const apiUrl = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1' 
         ? 'http://127.0.0.1:5000' // URL local
-        : 'https://69ef-2804-14c-5bd8-40fc-4114-f864-eef1-2566.ngrok-free.app'; // URL pública (ngrok)
+        : 'https://rare-bats-vanish.loca.lt'; // URL pública
 
     try {
         // Fazendo a requisição à API
