@@ -8,7 +8,7 @@ async function buscarStatus() {
     }
 
     // Define a URL da API com base no ambiente
-    const apiUrl = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1' 
+    const apiUrl = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1'
         ? 'http://127.0.0.1:5000' // URL local
         : 'https://69ef-2804-14c-5bd8-40fc-4114-f864-eef1-2566.ngrok-free.app'; // URL pública (ngrok)
 
@@ -23,7 +23,11 @@ async function buscarStatus() {
 
             // Verifica se o status é válido na resposta da API
             if (data.status) {
-                atualizarTexto(data.status);
+                // Exibe a mensagem de status
+                document.getElementById("mensagemStatus").textContent = `Status da O.S. ${osNumber}: ${data.status}`;
+
+                // Chama a função para atualizar os ícones de acordo com o status
+                atualizarIcones(data.status);
             } else {
                 throw new Error('O.S. não encontrada.'); // Caso o status não esteja presente
             }
@@ -36,6 +40,32 @@ async function buscarStatus() {
     } catch (error) {
         console.error("Erro ao buscar o status:", error);
         alert(error.message); // Alerta com a mensagem de erro
+    }
+}
+
+// Função para atualizar os ícones de acordo com o status
+function atualizarIcones(status) {
+    // Reseta a cor de todos os ícones
+    const iconeGerador = document.getElementById("Gerador");
+    const iconePolidora = document.getElementById("Polidora");
+    const iconeGravador = document.getElementById("Gravador");
+    const iconeMontagem = document.getElementById("Montagem");
+
+    // Define as cores para cada status
+    iconeGerador.style.color = 'white';
+    iconePolidora.style.color = 'white';
+    iconeGravador.style.color = 'white';
+    iconeMontagem.style.color = 'white';
+
+    // Altera a cor do ícone conforme o status recebido
+    if (status === "Gerador") {
+        iconeGerador.style.color = 'green';
+    } else if (status === "Polidora") {
+        iconePolidora.style.color = 'green';
+    } else if (status === "Gravadora") {
+        iconeGravador.style.color = 'green';
+    } else if (status === "Montagem") {
+        iconeMontagem.style.color = 'green';
     }
 }
 
