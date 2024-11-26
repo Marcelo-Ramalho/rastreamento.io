@@ -1,7 +1,7 @@
 async function buscarStatus() {
     const osNumber = document.getElementById("osNumber").value.trim();
-    console.log(`Buscando status para a OS: ${osNumber}`); // Debug
 
+    // Verifica se o número da O.S. foi inserido
     if (!osNumber) {
         alert("Por favor, insira um número de O.S.");
         return;
@@ -13,39 +13,77 @@ async function buscarStatus() {
         : 'https://69ef-2804-14c-5bd8-40fc-4114-f864-eef1-2566.ngrok-free.app'; // URL pública (ngrok)
 
     try {
+        // Fazendo a requisição à API
         const response = await fetch(`${apiUrl}/status/${osNumber}`);
-        
+
+        // Verifica se a resposta da API é bem-sucedida
         if (!response.ok) {
-            if (response.status === 404) {
-                alert('O.S. não encontrada.');
-                return;
-            } else {
-                alert('Erro ao acessar a API.');
-                return;
-            }
+            throw new Error('Erro ao acessar a API.');
         }
 
-        const responseClone = response.clone(); // 1
-        const contentType = responseClone.headers.get("content-type");
+        // Verifica se o tipo de conteúdo da resposta é JSON
+        const contentType = response.headers.get('Content-Type');
+        if (!contentType || !contentType.includes('application/json')) {
+            throw new Error('Resposta inválida. Esperado JSON.');
+        }
 
-        if (contentType && contentType.includes("application/json")) {
-            const data = await response.json();
-            console.log("Resposta da API:", data); // Debug
+        // Obtém os dados no formato JSON
+        const data = await response.json();
+        console.log("Resposta da API:", data); // Debug
 
-            if (data.status) {
-                atualizarTexto(data.status);
-            } else {
-                alert("Nenhuma O.S encontrada: Status desconhecido");
-            }
+        // Verifica se o status existe na resposta da API
+        if (data.status) {
+            atualizarTexto(data.status); // Atualiza o texto com o status
         } else {
-            const bodyText = await responseClone.text();
-            console.log('Resposta não JSON:', bodyText); // Debug
-            alert('Resposta inválida da API. Esperado JSON, mas obtido outro formato.');
+            throw new Error('O.S. não encontrada.');
         }
 
     } catch (error) {
-        // Verifica se o erro tem a propriedade 'message'
-        const errorMessage = error && error.message ? error.message : 'Ocorreu um erro inesperado. Tente novamente.';
-        alert(errorMessage); // Exibe a mensagem de erro
+        // Exibe o erro no console e em um alerta
+        console.error("Erro ao buscar o status:", error);
+        alert(error.message); // Exibe a mensagem de erro em um alerta
     }
 }
+
+// Função para atualizar o texto com base no status
+function atualizarTexto(status) {
+    console.log(`Atualizando cor para o status: ${status}`); // Debug
+
+    // Remove a classe 'active' de todos os parágrafos e ícones
+    document.querySelectorAll("footer p").forEach((p) => {
+        p.classList.remove("active");
+        p.style.color = ''; // Reseta a cor do texto
+    });
+    document.querySelectorAll("footer span").forEach((span) => {
+        span.classList.remove("active");
+        span.style.color = ''; // Reseta a cor dos ícones
+    });
+
+    // Procura o parágrafo e ícone correspondente ao status retornado
+    const paragraphs = document.querySelectorAll("footer p");
+    const icons = document.querySelectorAll("footer span");
+    let statusEncontrado = false;
+
+    paragraphs.forEach((p, index) => {
+        if (p.textContent.trim().toUpperCase() === status.toUpperCase()) {
+            p.classList.add("active");
+            p.style.color = '#00ff06'; // Muda a cor do texto para verde
+            icons[index].classList.add("active"); // Adiciona a classe 'active' ao ícone correspondente
+            icons[index].style.color = '#00ff06'; // Muda a cor do ícone para verde
+            statusEncontrado = true;
+            console.log(`Parágrafo e ícone ${status} ativados!`); // Debug
+        }
+    });
+
+    if (!statusEncontrado) {
+        console.warn(`Nenhum parágrafo encontrado para o status: ${status}`); // Debug
+        alert("Nenhuma O.S encontrada para o status: " + status); // Alerta para status não encontrado
+    }
+}
+
+// Adiciona o evento de teclado para o campo de entrada
+document.getElementById("osNumber").addEventListener("keypress", function(event) {
+    if (event.key === "Enter") {
+        buscarStatus(); // Chama a função ao pressionar Enter
+    }
+});
