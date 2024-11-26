@@ -7,8 +7,12 @@ async function buscarStatus() {
         return;
     }
 
+    // Definindo a URL do ngrok (use a URL gerada pelo ngrok)
+    const url = `https://0e85-2804-14c-5bd8-40fc-4114-f864-eef1-2566.ngrok-free.app/status/${osNumber}`; // Use a URL fornecida pelo ngrok
+
     try {
-        const response = await fetch(`https://0e85-2804-14c-5bd8-40fc-4114-f864-eef1-2566.ngrok-free.app/status/${osNumber}`);
+        // Fazendo a requisição para a API usando o URL do ngrok
+        const response = await fetch(url);
         
         // Verifica se a resposta é válida antes de tentar convertê-la para JSON
         if (!response.ok) {
@@ -80,6 +84,4 @@ function atualizarTexto(status) {
         console.warn(`Nenhum parágrafo encontrado para o status: ${status}`); // Debug
         alert("Nenhuma O.S encontrada: " + status); // Alerta para status não encontrado
     }
-    
 }
-
