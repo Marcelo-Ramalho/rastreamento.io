@@ -7,9 +7,13 @@ async function buscarStatus() {
         return;
     }
 
+    // Define a URL da API com base no ambiente
+    const apiUrl = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1' 
+        ? 'http://127.0.0.1:5000' // URL local
+        : 'https://69ef-2804-14c-5bd8-40fc-4114-f864-eef1-2566.ngrok-free.app'; // URL pública (ngrok)
+
     try {
-        // Substituímos a URL pelo link do ngrok
-        const response = await fetch(`https://69ef-2804-14c-5bd8-40fc-4114-f864-eef1-2566.ngrok-free.app/status/${osNumber}`);
+        const response = await fetch(`${apiUrl}/status/${osNumber}`);
         
         // Verifica se a resposta é válida antes de tentar convertê-la para JSON
         if (!response.ok) {
@@ -69,16 +73,4 @@ function atualizarTexto(status) {
     paragraphs.forEach((p, index) => {
         if (p.textContent.trim().toUpperCase() === status.toUpperCase()) {
             p.classList.add("active");
-            p.style.color = '#00ff06'; // Muda a cor do texto para verde
-            icons[index].classList.add("active"); // Adiciona a classe 'active' ao ícone correspondente
-            icons[index].style.color = '#00ff06'; // Muda a cor do ícone para verde
-            statusEncontrado = true;
-            console.log(`Parágrafo e ícone ${status} ativados!`); // Debug
-        }
-    });
-
-    if (!statusEncontrado) {
-        console.warn(`Nenhum parágrafo encontrado para o status: ${status}`); // Debug
-        alert("Nenhuma O.S encontrada: " + status); // Alerta para status não encontrado
-    }
-}
+            p.style.color = '
