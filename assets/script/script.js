@@ -36,18 +36,7 @@ async function buscarStatus() {
             throw new Error('O.S. não encontrada.'); // Caso o status não esteja presente
         }
 
-    } catch (error) {
-    console.error("Erro ao buscar o status:", error);
-
-    // Verifica se o erro possui a propriedade message
-    const errorMessage = error.message || "Erro desconhecido. Tente novamente mais tarde."; // Fallback para mensagem de erro
-
-    // Exibe a mensagem de erro correspondente
-    document.getElementById("mensagemStatus").textContent = errorMessage;
-    document.getElementById("mensagemStatus").style.color = 'red'; // Mensagem de erro
-    alert(errorMessage); // Alerta com a mensagem de erro
-    }
-}
+    } 
 
 // Adiciona o evento de teclado para o campo de entrada
 document.getElementById("osNumber").addEventListener("keypress", function(event) {
