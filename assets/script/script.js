@@ -9,7 +9,7 @@ async function buscarStatus() {
 
     try {
         // Substituímos a URL pelo link do ngrok
-        const response = await fetch(`https://0e85-2804-14c-5bd8-40fc-4114-f864-eef1-2566.ngrok-free.app/status/${osNumber}`);
+        const response = await fetch(`https://07e5-2804-14c-5bd8-40fc-4114-f864-eef1-2566.ngrok-free.app/status/${osNumber}`);
         
         // Verifica se a resposta é válida antes de tentar convertê-la para JSON
         if (!response.ok) {
