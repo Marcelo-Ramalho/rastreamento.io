@@ -77,24 +77,29 @@ function atualizarTexto(status) {
         span.style.color = ''; // Reseta a cor dos ícones
     });
 
-    // Procura o parágrafo e ícone correspondente ao status retornado
-    const paragraphs = document.querySelectorAll("footer p");
-    const icons = document.querySelectorAll("footer span");
-    let statusEncontrado = false;
+    // Mapeamento dos status para os respectivos IDs de ícones
+    const statusMap = {
+        "GERADOR": "Gerador",
+        "POLIDORA": "Polidora",
+        "GRAVADORA": "Gravador",
+        "MONTAGEM": "Montagem"
+    };
 
-    paragraphs.forEach((p, index) => {
-        if (p.textContent.trim().toUpperCase() === status.toUpperCase()) {
-            p.classList.add("active");
-            p.style.color = '#00ff06'; // Muda a cor do texto para verde
-            icons[index].classList.add("active"); // Adiciona a classe 'active' ao ícone correspondente
-            icons[index].style.color = '#00ff06'; // Muda a cor do ícone para verde
-            statusEncontrado = true;
+    // Verifica se o status retornado está no mapeamento
+    if (statusMap[status]) {
+        const icon = document.getElementById(statusMap[status]);
+        const paragraph = document.querySelector(`footer .${statusMap[status].toLowerCase()}`);
+        
+        if (icon && paragraph) {
+            // Marca o parágrafo e o ícone como 'ativos'
+            icon.classList.add("active");
+            icon.style.color = '#00ff06'; // Muda a cor do ícone para verde
+            paragraph.classList.add("active");
+            paragraph.style.color = '#00ff06'; // Muda a cor do texto para verde
             console.log(`Parágrafo e ícone ${status} ativados!`); // Debug
         }
-    });
-
-    if (!statusEncontrado) {
-        console.warn(`Nenhum parágrafo encontrado para o status: ${status}`); // Debug
-        alert("Nenhuma O.S encontrada: " + status); // Alerta para status não encontrado
+    } else {
+        console.warn(`Nenhum ícone ou parágrafo encontrado para o status: ${status}`); // Debug
+        alert("Nenhuma O.S. encontrada para o status: " + status); // Alerta para status não encontrado
     }
 }
