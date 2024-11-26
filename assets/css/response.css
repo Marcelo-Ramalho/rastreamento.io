@@ -1,0 +1,249 @@
+@media screen and (max-width: 956px) {
+
+
+    .head {
+        flex-direction: column;
+        /*align-items: center;*/
+        gap: 5rem;
+    }
+
+    .h1_rastreio {
+        font-size: 2.5rem;
+    }
+
+    .order_service {
+        gap: 1rem;
+    }
+
+    h2 {
+        font-size: 2.5rem;
+    }
+
+    input {
+        font-size: 1.6rem;
+    }
+
+
+    button {
+        font-size: 1.25rem;
+    }
+}
+
+
+@media screen and (max-width: 673px) {
+
+    .head {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 1.5rem;
+    }
+
+    .h1_rastreio {
+        align-items: flex-start;
+        font-size: 1.8rem;
+    }
+
+    h2 {
+        font-size: 1.9rem;
+    }
+
+    input {
+        width: 50%;
+        font-size: 1.2rem;
+    }
+
+    .lupa {
+        width: 2.7rem;
+        margin-top: .2rem;
+    }
+
+    button {
+        width: 2.5rem;
+        height: 2.5rem;
+        margin-left: 0.5rem;
+        margin-top: 0.2rem;
+    }
+
+    .mid {
+        display: none;
+    }
+
+    .p1,
+    .p2 {
+        margin-right: 1.8rem;
+        color: #ffffff;
+    }
+
+    .botton {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        margin-top: 10rem;
+    }
+
+    .material-symbols-outlined {
+        font-size: 3rem;
+        font-variation-settings: "FILL" 1, "wght" 700, "GRAD" 0, "opsz" 48;
+    }
+}
+
+
+
+@media screen and (max-width: 440px) {
+    /*CELULAR*/
+
+    .head {
+        grid-column: 1/1;
+        display: flex;
+        align-items: flex-start;
+        padding: 1.5rem;
+    }
+
+    .h1_rastreio {
+        margin-left: 2rem;
+        font-size: 1.7rem;
+    }
+
+
+    h2 {
+        font-size: 1.9rem;
+    }
+
+    input {
+        width: 50%;
+        font-size: 1.2rem;
+    }
+
+    .lupa {
+        width: 2.7rem;
+        margin-top: .2rem;
+    }
+
+    button {
+        width: 2.5rem;
+        height: 2.5rem;
+        margin-left: 0.5rem;
+        margin-top: 0.2rem;
+    }
+
+    .mid {
+        display: none;
+    }
+
+    .p1,
+    .p2 {
+        margin-right: 1.8rem;
+        color: #ffffff;
+    }
+
+    .botton {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        margin-top: 11rem;
+    }
+
+    .material-symbols-outlined {
+        font-size: 3rem;
+        font-variation-settings: "FILL" 1, "wght" 700, "GRAD" 0, "opsz" 48;
+    }
+}
+
+@media screen and (max-width: 375px) {
+
+    .h1_rastreio {
+        font-size: 1.5rem;
+    }
+
+    input::placeholder {
+
+        font-size: 1rem;
+    }
+
+}
+
+
+@media screen and (max-width: 360px) {
+
+    .h1_rastreio {
+        font-size: 1.5rem;
+    }
+
+    input::placeholder {
+
+        font-size: 1rem;
+    }
+
+}
+
+@media screen and (max-width: 320px) {
+
+    .h1_rastreio {
+        font-size: 1.1rem;
+        margin-left: 2.5rem;
+    }
+
+    .order_service {
+        margin-bottom: 3rem;
+    }
+
+    p,
+    label,
+    button {
+
+        font-size: small;
+    }
+
+    h2 {
+        font-size: 1.5rem;
+        margin-bottom: 9rem;
+        margin-left: 1rem;
+
+    }
+
+    input {
+        width: 120px;
+        font-size: 1rem;
+        margin-bottom: 9rem;
+    }
+
+    input::placeholder {
+
+        font-size: .8rem;
+    }
+
+    .lupa {
+        width: 2.1rem;
+        margin-top: .2rem;
+    }
+
+    button {
+        width: 2.5rem;
+        height: 2.5rem;
+        margin-left: 0.5rem;
+        margin-top: 0.2rem;
+        margin-bottom: 9rem;
+    }
+
+    .botton {
+        flex-direction: row;
+        justify-content: space-around;
+        flex-wrap: wrap;
+        margin-top: 10rem;
+    }
+
+    .material-symbols-outlined {
+        font-size: 1.5rem;
+        color: #e4e4e4;
+        font-variation-settings: "FILL" 1, "wght" 700, "GRAD" 0, "opsz" 48;
+    }
+
+    .elements2 {
+        margin-left: .8rem;
+    }
+
+    .elements3 {
+        margin-left: .8rem;
+    }
+}
