@@ -25,15 +25,27 @@ async function buscarStatus() {
             }
         }
 
-        const data = await response.json();
-        console.log("Resposta da API:", data); // Debug
+        // Clonando a resposta para tratar caso a resposta não seja JSON
+        const responseClone = response.clone(); // 1
+        const contentType = responseClone.headers.get("content-type");
 
-        // Verifica se o status é válido na resposta da API
-        if (data.status) {
-            atualizarTexto(data.status);
-            document.getElementById("mensagemStatus").textContent = ''; // Limpa a mensagem
+        // Verifica se a resposta é JSON
+        if (contentType && contentType.includes("application/json")) {
+            const data = await response.json();
+            console.log("Resposta da API:", data); // Debug
+
+            // Verifica se o status é válido na resposta da API
+            if (data.status) {
+                atualizarTexto(data.status);
+                document.getElementById("mensagemStatus").textContent = ''; // Limpa a mensagem
+            } else {
+                throw new Error('O.S. não encontrada.'); // Caso o status não esteja presente
+            }
         } else {
-            throw new Error('O.S. não encontrada.'); // Caso o status não esteja presente
+            // Se a resposta não for JSON, tenta pegar o texto da resposta
+            const bodyText = await responseClone.text();
+            console.log('Resposta não JSON:', bodyText); // Debug
+            throw new Error('Resposta inválida da API. Esperado JSON, mas obtido outro formato.');
         }
 
     } catch (error) {
