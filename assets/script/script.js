@@ -14,11 +14,16 @@ async function buscarStatus() {
 
     try {
         // Fazendo a requisição à API
-        const response = await fetch(`${apiUrl}/status/${osNumber}`);
+        const response = await fetch(`${apiUrl}/status/${osNumber}`, {
+            method: 'GET',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+        });
 
         // Verifica se a resposta da API é bem-sucedida
         if (!response.ok) {
-            throw new Error('Erro ao acessar a API.');
+            throw new Error(`Erro ao acessar a API: ${response.statusText}`);
         }
 
         // Verifica se o tipo de conteúdo da resposta é JSON
@@ -35,7 +40,7 @@ async function buscarStatus() {
         if (data.status) {
             atualizarTexto(data.status); // Atualiza o texto com o status
         } else {
-            throw new Error('O.S. não encontrada.');
+            throw new Error('O.S. não encontrada ou status não retornado.');
         }
 
     } catch (error) {
