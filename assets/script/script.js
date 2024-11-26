@@ -15,32 +15,23 @@ async function buscarStatus() {
     try {
         const response = await fetch(`${apiUrl}/status/${osNumber}`);
         
-        // Verifica se a resposta é válida antes de tentar convertê-la para JSON
-        if (!response.ok) {
-            // Adiciona um tratamento para status 404 ou qualquer outro erro
-            if (response.status === 404) {
-                throw new Error('O.S. não encontrada.'); // Mensagem de erro personalizada
+        // Verifica o tipo de conteúdo da resposta antes de tentar processá-la
+        const contentType = response.headers.get("content-type");
+        if (contentType && contentType.includes("application/json")) {
+            const data = await response.json();
+            console.log("Resposta da API:", data); // Debug
+
+            // Verifica se o status é válido na resposta da API
+            if (data.status) {
+                atualizarTexto(data.status);
             } else {
-                throw new Error('Erro ao acessar a API.'); // Mensagem de erro para outros status
+                throw new Error('O.S. não encontrada.'); // Caso o status não esteja presente
             }
-        }
-
-        const data = await response.json();
-        console.log("Resposta da API:", data); // Debug
-
-        // Verifica se o status é válido na resposta da API
-        if (data.status) {
-            atualizarTexto(data.status);
-            document.getElementById("mensagemStatus").textContent = ''; // Limpa a mensagem
         } else {
-            throw new Error('O.S. não encontrada.'); // Caso o status não esteja presente
+            throw new Error('Resposta inválida da API, esperava-se JSON.');
         }
-
     } catch (error) {
         console.error("Erro ao buscar o status:", error);
-        // Exibe a mensagem de erro correspondente
-        document.getElementById("mensagemStatus").textContent = error.message;
-        document.getElementById("mensagemStatus").style.color = 'red'; // Mensagem de erro
         alert(error.message); // Alerta com a mensagem de erro
     }
 }
