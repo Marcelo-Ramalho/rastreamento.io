@@ -34,16 +34,16 @@ async function buscarStatus() {
             document.getElementById("mensagemStatus").textContent = ''; // Limpa a mensagem
         } else {
             throw new Error('O.S. não encontrada.'); // Caso o status não esteja presente
-        } 
-        catch (error) {
+        }
+
+    } catch (error) {
         console.error("Erro ao buscar o status:", error);
         // Exibe a mensagem de erro correspondente
         document.getElementById("mensagemStatus").textContent = error.message;
         document.getElementById("mensagemStatus").style.color = 'red'; // Mensagem de erro
         alert(error.message); // Alerta com a mensagem de erro
     }
-
-    } 
+}
 
 // Adiciona o evento de teclado para o campo de entrada
 document.getElementById("osNumber").addEventListener("keypress", function(event) {
@@ -85,5 +85,4 @@ function atualizarTexto(status) {
         console.warn(`Nenhum parágrafo encontrado para o status: ${status}`); // Debug
         alert("Nenhuma O.S encontrada: " + status); // Alerta para status não encontrado
     }
-    
 }
