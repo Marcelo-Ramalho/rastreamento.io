@@ -15,7 +15,7 @@ async function buscarStatus() {
     try {
         const response = await fetch(`${apiUrl}/status/${osNumber}`);
         
-        // Verifica o tipo de conteúdo da resposta antes de tentar processá-la
+        // Verifica se a resposta é válida
         const contentType = response.headers.get("content-type");
         if (contentType && contentType.includes("application/json")) {
             const data = await response.json();
@@ -28,6 +28,9 @@ async function buscarStatus() {
                 throw new Error('O.S. não encontrada.'); // Caso o status não esteja presente
             }
         } else {
+            // Adicionando detalhes sobre a resposta não JSON
+            const text = await response.text();
+            console.error('Erro: A resposta não é JSON, mas HTML ou outro formato:', text);
             throw new Error('Resposta inválida da API, esperava-se JSON.');
         }
     } catch (error) {
@@ -42,38 +45,3 @@ document.getElementById("osNumber").addEventListener("keypress", function(event)
         buscarStatus(); // Chama a função ao pressionar Enter
     }
 });
-
-function atualizarTexto(status) {
-    console.log(`Atualizando cor para o status: ${status}`); // Debug
-
-    // Remove a classe 'active' de todos os parágrafos e ícones
-    document.querySelectorAll("footer p").forEach((p) => {
-        p.classList.remove("active");
-        p.style.color = ''; // Reseta a cor do texto
-    });
-    document.querySelectorAll("footer span").forEach((span) => {
-        span.classList.remove("active");
-        span.style.color = ''; // Reseta a cor dos ícones
-    });
-
-    // Procura o parágrafo e ícone correspondente ao status retornado
-    const paragraphs = document.querySelectorAll("footer p");
-    const icons = document.querySelectorAll("footer span");
-    let statusEncontrado = false;
-
-    paragraphs.forEach((p, index) => {
-        if (p.textContent.trim().toUpperCase() === status.toUpperCase()) {
-            p.classList.add("active");
-            p.style.color = '#00ff06'; // Muda a cor do texto para verde
-            icons[index].classList.add("active"); // Adiciona a classe 'active' ao ícone correspondente
-            icons[index].style.color = '#00ff06'; // Muda a cor do ícone para verde
-            statusEncontrado = true;
-            console.log(`Parágrafo e ícone ${status} ativados!`); // Debug
-        }
-    });
-
-    if (!statusEncontrado) {
-        console.warn(`Nenhum parágrafo encontrado para o status: ${status}`); // Debug
-        alert("Nenhuma O.S encontrada: " + status); // Alerta para status não encontrado
-    }
-}
