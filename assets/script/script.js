@@ -77,4 +77,17 @@ function atualizarTexto(status) {
     paragraphs.forEach((p, index) => {
         if (p.textContent.trim().toUpperCase() === status.toUpperCase()) {
             p.classList.add("active");
-            p.style.color = '
+            p.style.color = '#00ff06'; // Muda a cor do texto para verde
+            icons[index].classList.add("active"); // Adiciona a classe 'active' ao ícone correspondente
+            icons[index].style.color = '#00ff06'; // Muda a cor do ícone para verde
+            statusEncontrado = true;
+            console.log(`Parágrafo e ícone ${status} ativados!`); // Debug
+        }
+    });
+
+    if (!statusEncontrado) {
+        console.warn(`Nenhum parágrafo encontrado para o status: ${status}`); // Debug
+        alert("Nenhuma O.S encontrada: " + status); // Alerta para status não encontrado
+    }
+    
+}
