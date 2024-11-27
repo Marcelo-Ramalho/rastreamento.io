@@ -8,19 +8,20 @@ async function buscarStatus() {
     }
 
     // Define a URL da API com base no ambiente
-    const apiUrl = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1' 
-        ? 'http://127.0.0.1:5000' // URL local
-        : 'https://brave-animals-brush.loca.lt'; // URL pública (ajuste conforme necessário)
+const apiUrl = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1' 
+    ? 'http://192.168.0.169:5000' // Substitua pelo seu IP local
+    : 'https://brave-animals-brush.loca.lt'; // URL pública (ajuste conforme necessário)
 
-    try {
-        // Fazendo a requisição à API com autenticação básica
-        const response = await fetch(`${apiUrl}/status/${osNumber}`, {
-            method: 'GET',
-            headers: {
-                'Content-Type': 'application/json',
-                'Authorization': 'Basic ' + btoa('Marcelo:360380') // Substitua com suas credenciais reais
-            },
-        });
+try {
+    // Fazendo a requisição à API com autenticação básica
+    const response = await fetch(`${apiUrl}/status/${osNumber}`, {
+        method: 'GET',
+        headers: {
+            'Content-Type': 'application/json',
+            'Authorization': 'Basic ' + btoa('Marcelo:360380') // Substitua com suas credenciais reais
+        },
+    });
+
 
         // Verifica se a resposta da API é bem-sucedida
         if (!response.ok) {
