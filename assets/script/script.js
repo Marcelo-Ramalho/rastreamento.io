@@ -10,7 +10,7 @@ async function buscarStatus() {
     // Define a URL da API com base no ambiente
 const apiUrl = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1' 
     ? 'http://192.168.0.169:5000' // Substitua pelo seu IP local
-    : 'https://brave-animals-brush.loca.lt'; // URL pública (ajuste conforme necessário)
+    : 'https://tall-jeans-return.loca.lt'; // URL pública (ajuste conforme necessário)
 
 try {
     // Fazendo a requisição à API com autenticação básica
