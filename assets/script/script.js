@@ -8,9 +8,9 @@ async function buscarStatus() {
     }
 
     // Define a URL da API com base no ambiente
-    const apiUrl = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1' 
+    const apiUrl = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1'
         ? 'http://192.168.0.169:5000' // Substitua pelo seu IP local
-        : 'https://5e48-2804-14c-5bd8-40fc-cb0a-bce1-959f-e997.ngrok-free.app'; // URL pública (ajuste conforme necessário)
+        : 'https://5e48-2804-14c-5bd8-40fc-cb0a-bce1-959f-e997.ngrok-free.app'; // URL pública fornecida
 
     try {
         // Fazendo a requisição à API com autenticação básica
