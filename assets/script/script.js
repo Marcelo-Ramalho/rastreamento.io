@@ -10,7 +10,7 @@ async function buscarStatus() {
     // Define a URL da API com base no ambiente
     const apiUrl = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1' 
         ? 'http://127.0.0.1:5000' // URL local
-        : 'https://green-pears-rule.loca.lt'; // URL pública
+        : 'https://brave-animals-brush.loca.lt'; // URL pública (ajuste conforme necessário)
 
     try {
         // Fazendo a requisição à API com autenticação básica
@@ -18,13 +18,13 @@ async function buscarStatus() {
             method: 'GET',
             headers: {
                 'Content-Type': 'application/json',
-                'Authorization': 'Basic ' + btoa('username:password') // Substitua com suas credenciais
+                'Authorization': 'Basic ' + btoa('Marcelo:360380') // Substitua com suas credenciais reais
             },
         });
 
         // Verifica se a resposta da API é bem-sucedida
         if (!response.ok) {
-            throw new Error('Erro ao acessar a API.');
+            throw new Error('Erro ao acessar a API. Status: ' + response.status);
         }
 
         // Verifica se o tipo de conteúdo da resposta é JSON
@@ -49,4 +49,10 @@ async function buscarStatus() {
         console.error("Erro ao buscar o status:", error);
         alert(error.message); // Exibe a mensagem de erro em um alerta
     }
+}
+
+// Função para atualizar o texto com o status
+function atualizarTexto(status) {
+    const statusElement = document.getElementById("status");
+    statusElement.textContent = `Status da O.S.: ${status}`;
 }
