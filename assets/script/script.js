@@ -34,9 +34,5 @@ async function buscarStatus() {
             responseElement.forEach(item => item.style.color = 'gray'); // Resetar cor
         }
 
-    } catch (error) {
-        // Exibir detalhes do erro
-        console.error("Erro ao buscar o status:", error);
-        alert("Erro ao buscar o status: " + error.message); // Mensagem de erro mais detalhada
-    }
+    } 
 }
