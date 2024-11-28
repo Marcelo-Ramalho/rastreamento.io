@@ -61,4 +61,20 @@ function atualizarTexto(status) {
 document.getElementById("osNumber").addEventListener("keydown", (event) => {
   if (event.key === "Enter") {
     const osNumber = document.getElementById("osNumber").value.trim();
-    if
+    if (!osNumber) {
+      alert("Por favor, insira um número de O.S.");
+      return;
+    }
+    buscarStatus();
+  }
+});
+
+// Adiciona evento de clique no botão
+document.getElementById("buscarStatusBtn").addEventListener("click", () => {
+  const osNumber = document.getElementById("osNumber").value.trim();
+  if (!osNumber) {
+    alert("Por favor, insira um número de O.S.");
+    return;
+  }
+  buscarStatus();
+});
