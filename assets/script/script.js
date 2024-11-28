@@ -10,16 +10,24 @@ async function buscarStatus() {
 
   try {
     const response = await axios.get(`https://891f-2804-14c-5bd8-40fc-f53c-941b-7def-789.ngrok-free.app/status/${osNumber}`);
-
-    if (!response.ok) {
-      throw new Error(`Erro ao buscar status: ${response.status}`);
-    }
-
+    
+    // A resposta está no formato `data` do Axios
     const data = response.data;
     atualizarTexto(data.status);
   } catch (error) {
     console.error("Erro:", error);
-    alert(`Erro ao buscar status: ${error.message}`);
+
+    // Tratamento de erro detalhado
+    if (error.response) {
+      // Erro de resposta do servidor
+      alert(`Erro ao buscar status: ${error.response.status} - ${error.response.statusText}`);
+    } else if (error.request) {
+      // A requisição foi feita, mas nenhuma resposta foi recebida
+      alert("Erro ao buscar status: Nenhuma resposta recebida do servidor.");
+    } else {
+      // Outro tipo de erro
+      alert(`Erro ao buscar status: ${error.message}`);
+    }
   }
 }
 
@@ -53,20 +61,4 @@ function atualizarTexto(status) {
 document.getElementById("osNumber").addEventListener("keydown", (event) => {
   if (event.key === "Enter") {
     const osNumber = document.getElementById("osNumber").value.trim();
-    if (!osNumber) {
-      alert("Por favor, insira um número de O.S.");
-      return;
-    }
-    buscarStatus();
-  }
-});
-
-// Adiciona evento de clique no botão
-document.getElementById("buscarStatusBtn").addEventListener("click", () => {
-  const osNumber = document.getElementById("osNumber").value.trim();
-  if (!osNumber) {
-    alert("Por favor, insira um número de O.S.");
-    return;
-  }
-  buscarStatus();
-});
+    if
