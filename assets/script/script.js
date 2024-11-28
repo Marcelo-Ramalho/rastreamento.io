@@ -8,7 +8,7 @@ async function buscarStatus() {
   }
 
   try {
-    const response = await axios.get(`https://0dd1-2804-14c-5bd8-40fc-f53c-941b-7def-789.ngrok-free.app/status/${osNumber}`);
+    const response = await axios.get(`https://891f-2804-14c-5bd8-40fc-f53c-941b-7def-789.ngrok-free.app/status/${osNumber}`);
 
     if (!response.ok) {
       throw new Error(`Erro ao buscar status: ${response.status}`);
