@@ -3,7 +3,7 @@ const cleanedApiUrl = 'https://c5a6-2804-14c-5bd8-40fc-f53c-941b-7def-789.ngrok-
 
 // Função para buscar o status
 async function buscarStatus() {
-    const osNumber = document.getElementById('osNumberInput').value;  // Obter o número da O.S.
+    const osNumber = document.getElementById('osNumber').value;  // Obter o número da O.S.
     const responseElement = document.querySelector('#Gerador, #Polidora, #Gravador, #Montagem');
 
     try {
