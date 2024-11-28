@@ -1,67 +1,59 @@
 async function buscarStatus() {
-    const osNumber = document.getElementById("osNumber").value.trim();
+    const osNumber = document.getElementById('osNumber').value.trim();
 
     if (!osNumber) {
-        alert("Por favor, insira um número de O.S.");
+        alert("Por favor, insira o número da O.S.");
         return;
     }
 
-    // Define a URL da API com base no ambiente
-    const apiUrl = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1'
-        ? 'http://192.168.0.169:5000' // IP local
-        : 'https://c5a6-2804-14c-5bd8-40fc-f53c-941b-7def-789.ngrok-free.app'; // URL pública do Ngrok
-
+    const cleanedApiUrl = 'https://sua-api-url'; // Substitua pela URL da sua API
+    const responseElement = document.querySelector('#Gerador, #Polidora, #Gravador, #Montagem');
+    
     try {
-        // Remove espaços e assegura que a URL está correta
-        const cleanedApiUrl = apiUrl.trim();
+        // Fazendo a requisição para a API
         const response = await fetch(`${cleanedApiUrl}/status/${osNumber}`, {
             method: 'GET',
             headers: {
                 'Content-Type': 'application/json',
                 'Authorization': 'Basic ' + btoa('Marcelo:360380') // Certifique-se de que as credenciais estão corretas
-            },
+            }
         });
 
-        if (!response.ok) {
-            throw new Error('Erro ao acessar a API. Status: ' + response.status);
-        }
+        // Verifica se a resposta foi bem-sucedida
+        if (response.ok) {
+            const data = await response.json();
+            const status = data.status;
+            console.log(data); // Para debug, pode remover depois
 
-        const contentType = response.headers.get('Content-Type');
-        if (!contentType || !contentType.includes('application/json')) {
-            throw new Error('Resposta inválida. Esperado JSON.');
-        }
+            // Reseta as cores dos ícones
+            resetarCores();
 
-        const data = await response.json();
-        console.log("Resposta da API:", data); // Debug
+            // Atualiza os ícones com base no status
+            if (status === 'Gerador') {
+                document.getElementById('Gerador').style.color = 'green';
+            } else if (status === 'Polidora') {
+                document.getElementById('Polidora').style.color = 'green';
+            } else if (status === 'Gravadora') {
+                document.getElementById('Gravador').style.color = 'green';
+            } else if (status === 'Montagem') {
+                document.getElementById('Montagem').style.color = 'green';
+            } else {
+                alert('Status não reconhecido.');
+            }
 
-        if (data.status) {
-            atualizarTexto(data.status);
         } else {
-            throw new Error('O.S. não encontrada.');
+            console.error("Erro ao obter dados da API", response.status);
+            alert(`Erro: ${response.status}`);
         }
-
     } catch (error) {
         console.error("Erro ao buscar o status:", error);
         alert(error.message);
     }
 }
 
-function atualizarTexto(status) {
-    // Alteração da cor dos ícones
-    const statusElements = {
-        'Gerador': document.getElementById("Gerador"),
-        'Polidora': document.getElementById("Polidora"),
-        'Gravadora': document.getElementById("Gravador"),
-        'Montagem': document.getElementById("Montagem")
-    };
-
-    // Resetando a cor dos ícones
-    for (let key in statusElements) {
-        statusElements[key].style.color = "white";
-    }
-
-    // Mudando a cor do ícone do status ativo
-    if (statusElements[status]) {
-        statusElements[status].style.color = "green";
-    }
+function resetarCores() {
+    document.getElementById('Gerador').style.color = 'white';
+    document.getElementById('Polidora').style.color = 'white';
+    document.getElementById('Gravador').style.color = 'white';
+    document.getElementById('Montagem').style.color = 'white';
 }
