@@ -12,9 +12,7 @@ async function buscarStatus() {
         : 'https://c5a6-2804-14c-5bd8-40fc-f53c-941b-7def-789.ngrok-free.app'; // URL pública do Ngrok
 
     try {
-        // Remove espaços e assegura que a URL está correta
-        const cleanedApiUrl = apiUrl.trim();
-        const response = await fetch(`${cleanedApiUrl}/status/${osNumber}`, {
+        const response = await fetch(`${apiUrl}/status/${osNumber}`, {
             method: 'GET',
             headers: {
                 'Content-Type': 'application/json',
@@ -26,16 +24,11 @@ async function buscarStatus() {
             throw new Error('Erro ao acessar a API. Status: ' + response.status);
         }
 
-        const contentType = response.headers.get('Content-Type');
-        if (!contentType || !contentType.includes('application/json')) {
-            throw new Error('Resposta inválida. Esperado JSON.');
-        }
-
         const data = await response.json();
-        console.log("Resposta da API:", data); // Debug
+        console.log("Resposta da API:", data);
 
         if (data.status) {
-            atualizarTexto(data.status);
+            atualizarCores(data.status);
         } else {
             throw new Error('O.S. não encontrada.');
         }
@@ -46,7 +39,31 @@ async function buscarStatus() {
     }
 }
 
-function atualizarTexto(status) {
-    const statusElement = document.getElementById("status");
-    statusElement.textContent = `Status da O.S.: ${status}`;
+function atualizarCores(status) {
+    // Resetando todos os ícones para branco
+    const setores = ['Gerador', 'Polidora', 'Gravadora', 'Montagem'];
+    setores.forEach(setor => {
+        const elemento = document.getElementById(setor);
+        if (elemento) {
+            elemento.style.color = 'white';
+        }
+    });
+
+    // Agora, vamos alterar a cor para verde conforme o status
+    switch (status) {
+        case 'On Surface Blocker':
+            document.getElementById('Gerador').style.color = 'green';
+            break;
+        case 'On Surface Generator':
+            document.getElementById('Polidora').style.color = 'green';
+            break;
+        case 'On Surface Polisher':
+            document.getElementById('Gravadora').style.color = 'green';
+            break;
+        case 'On Surface Engraver':
+            document.getElementById('Montagem').style.color = 'green';
+            break;
+        default:
+            alert("Status não encontrado.");
+    }
 }
