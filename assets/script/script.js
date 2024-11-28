@@ -7,14 +7,22 @@ async function buscarStatus() {
         return;
     }
 
-    // Faz a requisição com Axios para a URL especificada
-    const response = await axios.get(`https://891f-2804-14c-5bd8-40fc-f53c-941b-7def-789.ngrok-free.app/status/${osNumber}`);
+    try {
+        // Faz a requisição com Axios para a URL especificada
+        const response = await axios.get(`https://891f-2804-14c-5bd8-40fc-f53c-941b-7def-789.ngrok-free.app/status/${osNumber}`);
+        
+        console.log("Resposta da API:", response.data); // Debug - Verifica a resposta
 
-    // Verifica se a resposta foi bem-sucedida
-    if (response && response.data && response.data.status) {
-        atualizarTexto(response.data.status);
-    } else {
-        alert("O.S. não encontrada ou não possui status.");
+        // Verifica se a resposta contém o status
+        if (response.data && response.data.status) {
+            atualizarTexto(response.data.status);
+        } else {
+            alert("O.S. não encontrada ou não possui status.");
+        }
+
+    } catch (error) {
+        // Caso aconteça algum erro na requisição, um alerta será exibido
+        alert("Erro ao buscar status: " + (error.response?.data?.message || error.message || "Erro desconhecido."));
     }
 }
 
