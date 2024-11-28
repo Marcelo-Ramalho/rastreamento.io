@@ -24,15 +24,29 @@ async function buscarStatus() {
             throw new Error(`Erro ao buscar status. Status: ${response.status}`);
         }
 
+        // Tente obter o JSON da resposta
         const data = await response.json();
-        const status = data.status;
+        
+        // Verifique se o JSON contém os campos esperados
+        if (data && data.status) {
+            const status = data.status;
+            console.log("Status obtido:", status); // Exibe o status no console para depuração
 
-        // Mostrar a cor do ícone de acordo com o status
-        if (status === 'Gerador') {
-            responseElement.forEach(item => item.style.color = 'green'); // Exemplo de troca de cor
+            // Mostrar a cor do ícone de acordo com o status
+            if (status === 'Gerador') {
+                responseElement.forEach(item => item.style.color = 'green'); // Exemplo de troca de cor
+            } else if (status === 'Montagem') {
+                responseElement.forEach(item => item.style.color = 'blue'); // Outra cor para o status 'Montagem'
+            } else {
+                responseElement.forEach(item => item.style.color = 'gray'); // Resetar cor
+            }
         } else {
-            responseElement.forEach(item => item.style.color = 'gray'); // Resetar cor
+            throw new Error('Status não encontrado no JSON da resposta.');
         }
 
-    } 
+    } catch (error) {
+        // Exibir detalhes do erro
+        console.error("Erro ao buscar o status:", error);
+        alert("Erro ao buscar o status: " + error.message); // Mensagem de erro mais detalhada
+    }
 }
