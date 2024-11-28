@@ -1,80 +1,70 @@
-// Função para buscar o status
 async function buscarStatus() {
-  const osNumber = document.getElementById("osNumber").value.trim();
-  console.log(`Buscando status para a OS: ${osNumber}`);
-
-  if (!osNumber) {
-    alert("Por favor, insira um número de O.S.");
-    return;
-  }
-
-  try {
-    const response = await axios.get(`https://891f-2804-14c-5bd8-40fc-f53c-941b-7def-789.ngrok-free.app/status/${osNumber}`);
-    
-    // A resposta está no formato `data` do Axios
-    const data = response.data;
-    atualizarTexto(data.status);
-  } catch (error) {
-    console.error("Erro:", error);
-
-    // Tratamento de erro detalhado
-    if (error.response) {
-      // Erro de resposta do servidor
-      alert(`Erro ao buscar status: ${error.response.status} - ${error.response.statusText}`);
-    } else if (error.request) {
-      // A requisição foi feita, mas nenhuma resposta foi recebida
-      alert("Erro ao buscar status: Nenhuma resposta recebida do servidor.");
-    } else {
-      // Outro tipo de erro
-      alert(`Erro ao buscar status: ${error.message}`);
-    }
-  }
-}
-
-// Função para atualizar o texto e os ícones
-function atualizarTexto(status) {
-  console.log(`Atualizando cor para o status: ${status}`);
-
-  function limparStatus() {
-    document.querySelectorAll("footer p, footer span").forEach(element => {
-      element.classList.remove("active");
-      element.style.color = '';
-    });
-  }
-
-  limparStatus();
-
-  const paragraphs = document.querySelectorAll("footer p");
-  const icons = document.querySelectorAll("footer span");
-
-  paragraphs.forEach((p, index) => {
-    if (p.textContent.trim().toUpperCase() === status.toUpperCase()) {
-      p.classList.add("active");
-      p.style.color = '#00ff06';
-      icons[index].classList.add("active");
-      icons[index].style.color = '#00ff06';
-    }
-  });
-}
-
-// Adiciona evento de tecla para verificar "Enter"
-document.getElementById("osNumber").addEventListener("keydown", (event) => {
-  if (event.key === "Enter") {
     const osNumber = document.getElementById("osNumber").value.trim();
+    console.log(`Buscando status para a OS: ${osNumber}`); // Debug
+
     if (!osNumber) {
-      alert("Por favor, insira um número de O.S.");
-      return;
+        alert("Por favor, insira um número de O.S.");
+        return;
     }
-    buscarStatus();
-  }
+
+    try {
+        // Faz a requisição com Axios para a URL especificada
+        const response = await axios.get(`https://891f-2804-14c-5bd8-40fc-f53c-941b-7def-789.ngrok-free.app/status/${osNumber}`);
+
+        console.log("Resposta da API:", response.data); // Debug
+
+        // Verifica se o status existe na resposta
+        if (response.data && response.data.status) {
+            atualizarTexto(response.data.status);
+        } else {
+            throw new Error("O.S. não encontrada."); // Lança erro se o status não estiver presente
+        }
+    } catch (error) {
+        console.error("Erro ao buscar o status:", error);
+
+        // Exibe o erro ao usuário
+        alert(error.response?.data?.message || error.message || "Erro desconhecido.");
+    }
+}
+
+// Adiciona o evento de teclado para o campo de entrada
+document.getElementById("osNumber").addEventListener("keypress", function(event) {
+    if (event.key === "Enter") {
+        buscarStatus(); // Chama a função ao pressionar Enter
+    }
 });
 
-// Adiciona evento de clique no botão
-document.getElementById("buscarStatusBtn").addEventListener("click", () => {
-  const osNumber = document.getElementById("osNumber").value.trim();
-  if (!osNumber) {
-    alert("Por favor, insira um número de O.S.");
-    return;
-  }
-  buscarStatus();
-});
+function atualizarTexto(status) {
+    console.log(`Atualizando cor para o status: ${status}`); // Debug
+
+    // Remove a classe 'active' de todos os parágrafos e ícones
+    document.querySelectorAll("footer p").forEach((p) => {
+        p.classList.remove("active");
+        p.style.color = ''; // Reseta a cor do texto
+    });
+    document.querySelectorAll("footer span").forEach((span) => {
+        span.classList.remove("active");
+        span.style.color = ''; // Reseta a cor dos ícones
+    });
+
+    // Procura o parágrafo e ícone correspondente ao status retornado
+    const paragraphs = document.querySelectorAll("footer p");
+    const icons = document.querySelectorAll("footer span");
+    let statusEncontrado = false;
+
+    paragraphs.forEach((p, index) => {
+        if (p.textContent.trim().toUpperCase() === status.toUpperCase()) {
+            p.classList.add("active");
+            p.style.color = '#00ff06'; // Muda a cor do texto para verde
+            icons[index].classList.add("active"); // Adiciona a classe 'active' ao ícone correspondente
+            icons[index].style.color = '#00ff06'; // Muda a cor do ícone para verde
+            statusEncontrado = true;
+            console.log(`Parágrafo e ícone ${status} ativados!`); // Debug
+        }
+    });
+
+    if (!statusEncontrado) {
+        console.warn(`Nenhum parágrafo encontrado para o status: ${status}`); // Debug
+        alert("Nenhum status encontrado para: " + status); // Alerta para status não encontrado
+    }
+}
