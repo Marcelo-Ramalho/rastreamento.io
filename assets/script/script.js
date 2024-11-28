@@ -1,4 +1,3 @@
-// Função para buscar o status da O.S. usando Axios
 async function buscarStatus() {
     const osNumber = document.getElementById('osNumberInput').value;  // Obtendo o número da O.S.
     const apiUrl = 'https://c5a6-2804-14c-5bd8-40fc-f53c-941b-7def-789.ngrok-free.app/status/' + osNumber;
@@ -14,25 +13,29 @@ async function buscarStatus() {
             }
         });
 
-        // Verificando se a resposta tem os dados esperados
-        if (response.data && response.data.status) {
+        // Verificando a resposta no console
+        console.log('Resposta da API:', response.data);  // Log da resposta
+
+        // Verificando se a resposta contém 'status' e 'os_number'
+        if (response.data && response.data.status && response.data.os_number) {
             console.log("Status encontrado:", response.data.status);
 
             // Atualizando os elementos da interface com o status retornado
-            // Exemplo: atualizando os ícones ou texto no frontend conforme o status
             const status = response.data.status;
             const statusElement = document.getElementById('statusElement'); // Elemento para exibir o status
 
-            // Aqui você pode fazer o que for necessário com o status, como mudar cores de ícones ou texto
+            // Exibindo o status na tela
             statusElement.textContent = `Status da O.S. ${osNumber}: ${status}`;
-            
-            // Atualize a interface do usuário com a cor dos ícones, por exemplo
-            updateIcons(status);  // Suponha que você tenha essa função para atualizar os ícones
+
+            // Atualizando os ícones de acordo com o status
+            updateIcons(status);  // Função para atualizar os ícones com a cor
+
         } else {
-            console.error('Status não encontrado');
+            console.error('Status ou O.S. não encontrados na resposta.');
             alert('Status não encontrado para a O.S. ' + osNumber);
         }
     } catch (error) {
+        // Se ocorrer um erro durante a requisição ou processamento
         console.error('Erro ao buscar o status:', error);
         alert('Erro ao buscar o status: ' + error.message);
     }
@@ -40,25 +43,20 @@ async function buscarStatus() {
 
 // Função para atualizar os ícones com base no status
 function updateIcons(status) {
-    // Aqui você pode adicionar lógica para trocar os ícones dependendo do status
     const icons = {
-        'Gerador': '#GeradorIcon',
-        'Polidora': '#PolidoraIcon',
-        'Gravadora': '#GravadorIcon',
-        'Montagem': '#MontagemIcon'
+        'Gerador': document.getElementById('Gerador'),
+        'Polidora': document.getElementById('Polidora'),
+        'Gravadora': document.getElementById('Gravadora'),
+        'Montagem': document.getElementById('Montagem')
     };
 
-    // Resetando a cor de todos os ícones (ficando branca, por exemplo)
-    Object.keys(icons).forEach((statusName) => {
-        const icon = document.querySelector(icons[statusName]);
-        if (icon) {
-            icon.style.color = 'white';  // Resetando para cor padrão
-        }
+    // Resetando todos os ícones para cor padrão (branco)
+    Object.keys(icons).forEach(icon => {
+        icons[icon].style.fill = 'white';
     });
 
-    // Mudando a cor do ícone correspondente ao status atual
-    const activeIcon = document.querySelector(icons[status]);
-    if (activeIcon) {
-        activeIcon.style.color = 'green';  // Mudando a cor do ícone para verde
+    // Alterando a cor do ícone correspondente ao status atual
+    if (icons[status]) {
+        icons[status].style.fill = 'green';  // Alterar para verde quando no setor correto
     }
 }
