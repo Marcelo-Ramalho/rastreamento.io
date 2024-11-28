@@ -1,44 +1,43 @@
-document.addEventListener('DOMContentLoaded', () => {
-    // Garantir que o botão funcione apenas quando o DOM estiver completamente carregado
-    const osInput = document.getElementById('osNumber');
-    const button = document.querySelector('button');
-    
-    // Função para buscar o status
-    async function buscarStatus() {
-        const osNumber = osInput.value;  // Obter o número da O.S.
-        const responseElement = document.querySelector('#Gerador, #Polidora, #Gravador, #Montagem');
+const osInput = document.getElementById('osNumberInput'); // Input para número da O.S.
 
-        try {
-            // Fazendo a requisição para a API com Axios
-            const response = await axios.get(`${cleanedApiUrl}/status/${osNumber}`);
+const cleanedApiUrl = 'https://c5a6-2804-14c-5bd8-40fc-f53c-941b-7def-789.ngrok-free.app'; // Substitua pela URL da sua API
 
-            // Verificando a resposta
-            if (response.data && response.data.status) {
-                console.log("Status encontrado:", response.data.status);
-                // Atualizar o DOM de acordo com o status recebido
-                const status = response.data.status.toLowerCase();
-                if (responseElement) {
-                    responseElement.classList.remove('green');  // Remover cor anterior
-                    if (status === 'gerador') {
-                        document.getElementById('Gerador').classList.add('green');
-                    } else if (status === 'polidora') {
-                        document.getElementById('Polidora').classList.add('green');
-                    } else if (status === 'gravadora') {
-                        document.getElementById('Gravador').classList.add('green');
-                    } else if (status === 'montagem') {
-                        document.getElementById('Montagem').classList.add('green');
-                    }
+async function buscarStatus() {
+    const osNumber = osInput.value;  // Obter o número da O.S.
+    const responseElement = document.querySelector('#Gerador, #Polidora, #Gravador, #Montagem');
+
+    try {
+        // Fazendo a requisição para a API com Axios
+        const response = await axios.get(`${cleanedApiUrl}/status/${osNumber}`);
+
+        // Verificando a resposta completa no console
+        console.log('Resposta da API:', response);
+
+        // Verificando se a resposta contém 'status'
+        if (response.data && response.data.status) {
+            console.log("Status encontrado:", response.data.status);
+            // Atualizar o DOM de acordo com o status recebido
+            const status = response.data.status.toLowerCase();
+            if (responseElement) {
+                responseElement.classList.remove('green');  // Remover cor anterior
+                if (status === 'gerador') {
+                    document.getElementById('Gerador').classList.add('green');
+                } else if (status === 'polidora') {
+                    document.getElementById('Polidora').classList.add('green');
+                } else if (status === 'gravadora') {
+                    document.getElementById('Gravador').classList.add('green');
+                } else if (status === 'montagem') {
+                    document.getElementById('Montagem').classList.add('green');
                 }
-            } else {
-                console.error('Status não encontrado na resposta:', response);
-                alert('Status não encontrado para a O.S. ' + osNumber);
             }
-        } catch (error) {
-            console.error("Erro ao buscar o status:", error);
-            alert(error.message);  // Exibir o erro se ocorrer
+        } else {
+            // Se não encontrar o status, mostrar um alerta com o erro
+            console.error('Status não encontrado na resposta:', response);
+            alert('Status não encontrado para a O.S. ' + osNumber);
         }
+    } catch (error) {
+        // Exibindo o erro no console e mostrando o alerta para o usuário
+        console.error("Erro ao buscar o status:", error);
+        alert(error.message);  // Exibir o erro se ocorrer
     }
-
-    // Adiciona o evento de clique ao botão
-    button.addEventListener('click', buscarStatus);
-});
+}
