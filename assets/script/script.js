@@ -1,6 +1,6 @@
 async function buscarStatus() {
     const osNumber = document.getElementById('osNumberInput').value;  // Obtendo o número da O.S.
-    const apiUrl = 'https://0dd1-2804-14c-5bd8-40fc-f53c-941b-7def-789.ngrok-free.app/status/' + osNumber;
+    const apiUrl = 'https://0dd1-2804-14c-5bd8-40fc-f53c-941b-7def-789.ngrok-free.app' + osNumber;
 
     try {
         // Autenticação básica com Axios
