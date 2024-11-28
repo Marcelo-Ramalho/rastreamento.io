@@ -1,48 +1,41 @@
-async function buscarStatus() {
-    const osNumber = document.getElementById('osNumber').value;  // Pega o valor da O.S.
+// Variável com a URL da sua API (modifique para a URL correta do Ngrok ou da API)
+const cleanedApiUrl = 'https://c5a6-2804-14c-5bd8-40fc-f53c-941b-7def-789.ngrok-free.app'; 
 
-    const cleanedApiUrl = 'https://c5a6-2804-14c-5bd8-40fc-f53c-941b-7def-789.ngrok-free.app'; // Sua URL
+// Função para buscar o status
+async function buscarStatus() {
+    const osNumber = document.getElementById('osNumberInput').value;  // Obter o número da O.S.
     const responseElement = document.querySelector('#Gerador, #Polidora, #Gravador, #Montagem');
 
     try {
-        // Fazendo a requisição para a API
-        const response = await axios.get(`${cleanedApiUrl}/status/${osNumber}`, {
-            headers: {
-                'Content-Type': 'application/json',
-                'Authorization': 'Basic ' + btoa('Marcelo:360380') // Credenciais, caso necessário
-            }
-        });
+        // Fazendo a requisição para a API com Axios
+        const response = await axios.get(`${cleanedApiUrl}/status/${osNumber}`);
 
-        // Verificando se a resposta foi bem-sucedida
+        // Verificando a resposta
         if (response.data && response.data.status) {
-            const status = response.data.status;
-            // Aqui, altere a cor dos ícones com base no status
-            atualizarIcones(status);
+            console.log("Status encontrado:", response.data.status);
+            // Atualizar o DOM de acordo com o status recebido
+            const status = response.data.status.toLowerCase();
+            if (responseElement) {
+                responseElement.classList.remove('green');  // Remover cor anterior
+                if (status === 'gerador') {
+                    document.getElementById('Gerador').classList.add('green');
+                } else if (status === 'polidora') {
+                    document.getElementById('Polidora').classList.add('green');
+                } else if (status === 'gravadora') {
+                    document.getElementById('Gravador').classList.add('green');
+                } else if (status === 'montagem') {
+                    document.getElementById('Montagem').classList.add('green');
+                }
+            }
         } else {
-            console.error("Status não encontrado na resposta:", response);
-            alert("Status não encontrado.");
+            console.error('Status não encontrado na resposta:', response);
+            alert('Status não encontrado para a O.S. ' + osNumber);
         }
     } catch (error) {
         console.error("Erro ao buscar o status:", error);
-        alert("Erro ao buscar o status. Verifique a O.S. ou a conexão.");
+        alert(error.message);  // Exibir o erro se ocorrer
     }
 }
 
-function atualizarIcones(status) {
-    // Reseta os ícones
-    const iconElements = document.querySelectorAll('.material-symbols-outlined');
-    iconElements.forEach(icon => {
-        icon.style.color = 'white'; // Cor padrão
-    });
-
-    // Atualiza a cor do ícone correspondente
-    if (status === 'Gerador') {
-        document.getElementById('Gerador').style.color = 'green';
-    } else if (status === 'Polidora') {
-        document.getElementById('Polidora').style.color = 'green';
-    } else if (status === 'Gravadora') {
-        document.getElementById('Gravador').style.color = 'green';
-    } else if (status === 'Montagem') {
-        document.getElementById('Montagem').style.color = 'green';
-    }
-}
+// Para disparar a função quando o botão for clicado
+document.querySelector('button').addEventListener('click', buscarStatus);
