@@ -12,7 +12,9 @@ async function buscarStatus() {
         : 'https://c5a6-2804-14c-5bd8-40fc-f53c-941b-7def-789.ngrok-free.app'; // URL pública do Ngrok
 
     try {
-        const response = await fetch(`${apiUrl}/status/${osNumber}`, {
+        // Remove espaços e assegura que a URL está correta
+        const cleanedApiUrl = apiUrl.trim();
+        const response = await fetch(`${cleanedApiUrl}/status/${osNumber}`, {
             method: 'GET',
             headers: {
                 'Content-Type': 'application/json',
@@ -24,11 +26,16 @@ async function buscarStatus() {
             throw new Error('Erro ao acessar a API. Status: ' + response.status);
         }
 
+        const contentType = response.headers.get('Content-Type');
+        if (!contentType || !contentType.includes('application/json')) {
+            throw new Error('Resposta inválida. Esperado JSON.');
+        }
+
         const data = await response.json();
-        console.log("Resposta da API:", data);
+        console.log("Resposta da API:", data); // Debug
 
         if (data.status) {
-            atualizarCores(data.status);
+            atualizarTexto(data.status);
         } else {
             throw new Error('O.S. não encontrada.');
         }
@@ -39,31 +46,22 @@ async function buscarStatus() {
     }
 }
 
-function atualizarCores(status) {
-    // Resetando todos os ícones para branco
-    const setores = ['Gerador', 'Polidora', 'Gravadora', 'Montagem'];
-    setores.forEach(setor => {
-        const elemento = document.getElementById(setor);
-        if (elemento) {
-            elemento.style.color = 'white';
-        }
-    });
+function atualizarTexto(status) {
+    // Alteração da cor dos ícones
+    const statusElements = {
+        'Gerador': document.getElementById("Gerador"),
+        'Polidora': document.getElementById("Polidora"),
+        'Gravadora': document.getElementById("Gravador"),
+        'Montagem': document.getElementById("Montagem")
+    };
 
-    // Agora, vamos alterar a cor para verde conforme o status
-    switch (status) {
-        case 'On Surface Blocker':
-            document.getElementById('Gerador').style.color = 'green';
-            break;
-        case 'On Surface Generator':
-            document.getElementById('Polidora').style.color = 'green';
-            break;
-        case 'On Surface Polisher':
-            document.getElementById('Gravadora').style.color = 'green';
-            break;
-        case 'On Surface Engraver':
-            document.getElementById('Montagem').style.color = 'green';
-            break;
-        default:
-            alert("Status não encontrado.");
+    // Resetando a cor dos ícones
+    for (let key in statusElements) {
+        statusElements[key].style.color = "white";
+    }
+
+    // Mudando a cor do ícone do status ativo
+    if (statusElements[status]) {
+        statusElements[status].style.color = "green";
     }
 }
