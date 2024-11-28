@@ -1,62 +1,48 @@
 async function buscarStatus() {
-    const osNumber = document.getElementById('osNumberInput').value;  // Obtendo o número da O.S.
-    const apiUrl = 'https://0dd1-2804-14c-5bd8-40fc-f53c-941b-7def-789.ngrok-free.app/status/' + osNumber;
+  const osNumber = document.getElementById("osNumber").value.trim();
+  console.log(`Buscando status para a OS: ${osNumber}`);
 
-    try {
-        // Autenticação básica com Axios
-        const authHeader = 'Basic ' + btoa('Marcelo:360380');  // Codificando 'Marcelo:360380' em Base64
+  if (!osNumber) {
+    alert("Por favor, insira um número de O.S.");
+    return;
+  }
 
-        // Fazendo a requisição para a API
-        const response = await axios.get(apiUrl, {
-            headers: {
-                'Authorization': authHeader  // Enviando o cabeçalho de autenticação
-            }
-        });
+  try {
+    const response = await axios.get(`https://0dd1-2804-14c-5bd8-40fc-f53c-941b-7def-789.ngrok-free.app/status/${osNumber}`);
 
-        // Verificando a resposta no console
-        console.log('Resposta da API:', response.data);  // Log da resposta
-
-        // Verificando se a resposta contém 'status' e 'os_number'
-        if (response.data && response.data.status && response.data.os_number) {
-            console.log("Status encontrado:", response.data.status);
-
-            // Atualizando os elementos da interface com o status retornado
-            const status = response.data.status;
-            const statusElement = document.getElementById('statusElement'); // Elemento para exibir o status
-
-            // Exibindo o status na tela
-            statusElement.textContent = `Status da O.S. ${osNumber}: ${status}`;
-
-            // Atualizando os ícones de acordo com o status
-            updateIcons(status);  // Função para atualizar os ícones com a cor
-
-        } else {
-            console.error('Status ou O.S. não encontrados na resposta.');
-            alert('Status não encontrado para a O.S. ' + osNumber);
-        }
-    } catch (error) {
-        // Se ocorrer um erro durante a requisição ou processamento
-        console.error('Erro ao buscar o status:', error);
-        alert('Erro ao buscar o status: ' + error.message);
+    if (!response.ok) {
+      throw new Error(`Erro ao buscar status: ${response.status}`);
     }
+
+    const data = response.data;
+    atualizarTexto(data.status);
+  } catch (error) {
+    console.error("Erro:", error);
+    document.getElementById("mensagemStatus").textContent = `Erro ao buscar status: ${error.message}`;
+  }
 }
 
-// Função para atualizar os ícones com base no status
-function updateIcons(status) {
-    const icons = {
-        'Gerador': document.getElementById('Gerador'),
-        'Polidora': document.getElementById('Polidora'),
-        'Gravadora': document.getElementById('Gravadora'),
-        'Montagem': document.getElementById('Montagem')
-    };
+function atualizarTexto(status) {
+  console.log(`Atualizando cor para o status: ${status}`);
 
-    // Resetando todos os ícones para cor padrão (branco)
-    Object.keys(icons).forEach(icon => {
-        icons[icon].style.fill = 'white';
+  function limparStatus() {
+    document.querySelectorAll("footer p, footer span").forEach(element => {
+      element.classList.remove("active");
+      element.style.color = '';
     });
+  }
 
-    // Alterando a cor do ícone correspondente ao status atual
-    if (icons[status]) {
-        icons[status].style.fill = 'green';  // Alterar para verde quando no setor correto
+  limparStatus();
+
+  const paragraphs = document.querySelectorAll("footer p");
+  const icons = document.querySelectorAll("footer span");
+
+  paragraphs.forEach((p, index) => {
+    if (p.textContent.trim().toUpperCase() === status.toUpperCase()) {
+      p.classList.add("active");
+      p.style.color = '#00ff06';
+      icons[index].classList.add("active");
+      icons[index].style.color = '#00ff06';
     }
+  });
 }
