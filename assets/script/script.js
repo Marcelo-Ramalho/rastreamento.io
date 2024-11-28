@@ -6,7 +6,7 @@ async function buscarStatus() {
         return;
     }
 
-    const cleanedApiUrl = 'https://sua-api-url'; // Substitua pela URL da sua API
+    const cleanedApiUrl = 'https://c5a6-2804-14c-5bd8-40fc-f53c-941b-7def-789.ngrok-free.app'; // Substitua pela URL da sua API
     const responseElement = document.querySelector('#Gerador, #Polidora, #Gravador, #Montagem');
     
     try {
