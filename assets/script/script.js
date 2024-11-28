@@ -8,21 +8,29 @@ async function buscarStatus() {
     }
 
     try {
-        // Faz a requisição com Axios para a URL especificada
-        const response = await axios.get(`https://891f-2804-14c-5bd8-40fc-f53c-941b-7def-789.ngrok-free.app/status/${osNumber}`);
-        
-        console.log("Resposta da API:", response.data); // Debug - Verifica a resposta
+        // Requisição com autenticação básica
+        const response = await axios.get(`https://891f-2804-14c-5bd8-40fc-f53c-941b-7def-789.ngrok-free.app/status/${osNumber}`, {
+            auth: {
+                username: 'Marcelo', // Nome de usuário
+                password: '360380'   // Senha
+            }
+        });
 
-        // Verifica se a resposta contém o status
-        if (response.data && response.data.status) {
+        console.log("Resposta da API:", response.data); // Debug
+
+        // Verifica se o status é válido na resposta da API
+        if (response.data.status) {
             atualizarTexto(response.data.status);
+            document.getElementById("mensagemStatus").textContent = ''; // Limpa a mensagem
         } else {
-            alert("O.S. não encontrada ou não possui status.");
+            throw new Error('O.S. não encontrada ou não possui status.'); // Caso o status não esteja presente
         }
 
     } catch (error) {
-        // Caso aconteça algum erro na requisição, um alerta será exibido
-        alert("Erro ao buscar status: " + (error.response?.data?.message || error.message || "Erro desconhecido."));
+        console.error("Erro ao buscar o status:", error);
+
+        // Exibe o erro ao usuário
+        alert(error.response?.data?.message || error.message || "Erro desconhecido.");
     }
 }
 
@@ -49,21 +57,4 @@ function atualizarTexto(status) {
     // Procura o parágrafo e ícone correspondente ao status retornado
     const paragraphs = document.querySelectorAll("footer p");
     const icons = document.querySelectorAll("footer span");
-    let statusEncontrado = false;
-
-    paragraphs.forEach((p, index) => {
-        if (p.textContent.trim().toUpperCase() === status.toUpperCase()) {
-            p.classList.add("active");
-            p.style.color = '#00ff06'; // Muda a cor do texto para verde
-            icons[index].classList.add("active"); // Adiciona a classe 'active' ao ícone correspondente
-            icons[index].style.color = '#00ff06'; // Muda a cor do ícone para verde
-            statusEncontrado = true;
-            console.log(`Parágrafo e ícone ${status} ativados!`); // Debug
-        }
-    });
-
-    if (!statusEncontrado) {
-        console.warn(`Nenhum parágrafo encontrado para o status: ${status}`); // Debug
-        alert("Nenhum status encontrado para: " + status); // Alerta para status não encontrado
-    }
-}
+    let statusEncontrad
