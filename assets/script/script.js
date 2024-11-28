@@ -7,8 +7,16 @@ async function buscarStatus() {
     const responseElement = document.querySelector('#Gerador, #Polidora, #Gravador, #Montagem');
 
     try {
+        // Adicionando autenticação básica ao cabeçalho
+        const authHeader = 'Basic ' + btoa('Marcelo:360380'); // Substitua com as credenciais corretas
+
         // Fazendo a requisição para a API com Axios
-        const response = await axios.get(`${cleanedApiUrl}/status/${osNumber}`);
+        const response = await axios.get(`${cleanedApiUrl}/status/${osNumber}`, {
+            headers: {
+                'Authorization': authHeader,  // Adicionando o cabeçalho de autenticação
+                'Content-Type': 'application/json'
+            }
+        });
 
         // Verificando a resposta completa no console
         console.log('Resposta da API:', response);
